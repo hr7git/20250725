@@ -8,6 +8,7 @@ st.set_page_config(
     page_title="발리 인터랙티브 여행 코스",
     page_icon="🗺️",
     layout="wide",
+    initial_sidebar_state="collapsed"
 )
 
 # --- 제목 및 설명 ---
@@ -53,6 +54,7 @@ hospitals = {
 df_hospitals = pd.DataFrame.from_dict(hospitals, orient='index', columns=['lat', 'lon', 'desc', 'phone'])
 
 # --- 화면 구성 ---
+st.markdown("---")
 tab1, tab2, tab3, tab4 = st.tabs(["🗺️ 인터랙티브 지도", "🗓️ 세부 추천 일정", "🍽️ 추천 맛집 리스트", "🚨 응급연락처"])
 
 with tab1:
@@ -97,22 +99,45 @@ with tab1:
     """)
 
     # 6. Streamlit에 Folium 지도 출력
-    st_folium(m, width= '100%', height=500)
+    try:
+        st_folium(m, width='100%', height=500, returned_data=["last_object_clicked"])
+    except Exception as e:
+        st.error("지도를 로드하는 중 오류가 발생했습니다. 페이지를 새로고침해 주세요.")
+        st.write(f"오류 내용: {str(e)}")
 
 
 with tab2:
     st.header("🗓️ 4박 5일 세부 추천 일정")
-    # (이전 코드와 동일한 내용)
-    with st.expander("**Day 1: 스미냑/짱구 - 활기찬 해변과 트렌디한 감성**", expanded=True):
-        st.markdown("- **오후**: 공항 도착 후, 스미냑/짱구 숙소로 이동\n- **저녁**: 해변 레스토랑이나 비치 클럽에서 서핑과 함께 활기찬 분위기 만끽\n- **주요 스팟**: 스미냑 비치, 짱구 비치, 포테이토 헤드 비치 클럽")
-    with st.expander("**Day 2: 우붓 - 발리의 예술과 영혼을 만나다**"):
-        st.markdown("- **오전**: 문화 중심지 우붓으로 이동\n- **오후**: 우붓 왕궁, 우붓 시장, 몽키 포레스트 방문\n- **주요 스팟**: 우붓 왕궁, 우붓 시장, 몽키 포레스트")
-    with st.expander("**Day 3: 우붓 근교 - 인생 사진과 함께하는 자연 탐험**"):
-        st.markdown("- **오전**: '천국의 문' 렘푸양 사원 방문 (일찍 출발 추천)\n- **오후**: '물의 궁전' 띠르따 강가 산책 후 뜨갈랄랑 계단식 논 방문\n- **주요 스팟**: 렘푸양 사원, 띠르따 강가, 뜨갈랄랑")
-    with st.expander("**Day 4: 울루와뚜/짐바란 - 장엄한 절벽과 로맨틱한 일몰**"):
-        st.markdown("- **오후**: 울루와뚜 절벽 사원에서 인도양 절경 감상\n- **저녁**: 케착 파이어 댄스 관람 후 짐바란 해변에서 해산물 디너\n- **주요 스팟**: 울루와뚜 사원, 짐바란 베이")
-    with st.expander("**Day 5: 출국 - 마지막 여운 즐기기**"):
-        st.markdown("- **오전**: 꾸따 비치 또는 스미냑에서 마지막 쇼핑\n- **오후**: 공항으로 이동하여 출국\n- **주요 스팟**: 꾸따 비치, 비치워크 쇼핑센터")
+    
+    day1_expander = st.expander("**Day 1: 스미냑/짱구 - 활기찬 해변과 트렌디한 감성**", expanded=True)
+    with day1_expander:
+        st.markdown("- **오후**: 공항 도착 후, 스미냑/짱구 숙소로 이동")
+        st.markdown("- **저녁**: 해변 레스토랑이나 비치 클럽에서 서핑과 함께 활기찬 분위기 만끽")
+        st.markdown("- **주요 스팟**: 스미냑 비치, 짱구 비치, 포테이토 헤드 비치 클럽")
+    
+    day2_expander = st.expander("**Day 2: 우붓 - 발리의 예술과 영혼을 만나다**")
+    with day2_expander:
+        st.markdown("- **오전**: 문화 중심지 우붓으로 이동")
+        st.markdown("- **오후**: 우붓 왕궁, 우붓 시장, 몽키 포레스트 방문")
+        st.markdown("- **주요 스팟**: 우붓 왕궁, 우붓 시장, 몽키 포레스트")
+    
+    day3_expander = st.expander("**Day 3: 우붓 근교 - 인생 사진과 함께하는 자연 탐험**")
+    with day3_expander:
+        st.markdown("- **오전**: '천국의 문' 렘푸양 사원 방문 (일찍 출발 추천)")
+        st.markdown("- **오후**: '물의 궁전' 띠르따 강가 산책 후 뜨갈랄랑 계단식 논 방문")
+        st.markdown("- **주요 스팟**: 렘푸양 사원, 띠르따 강가, 뜨갈랄랑")
+    
+    day4_expander = st.expander("**Day 4: 울루와뚜/짐바란 - 장엄한 절벽과 로맨틱한 일몰**")
+    with day4_expander:
+        st.markdown("- **오후**: 울루와뚜 절벽 사원에서 인도양 절경 감상")
+        st.markdown("- **저녁**: 케착 파이어 댄스 관람 후 짐바란 해변에서 해산물 디너")
+        st.markdown("- **주요 스팟**: 울루와뚜 사원, 짐바란 베이")
+    
+    day5_expander = st.expander("**Day 5: 출국 - 마지막 여운 즐기기**")
+    with day5_expander:
+        st.markdown("- **오전**: 꾸따 비치 또는 스미냑에서 마지막 쇼핑")
+        st.markdown("- **오후**: 공항으로 이동하여 출국")
+        st.markdown("- **주요 스팟**: 꾸따 비치, 비치워크 쇼핑센터")
 
 
 with tab3:
